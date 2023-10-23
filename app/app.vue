@@ -19,6 +19,15 @@
 </template>
 
 <script setup lang="ts">
+useSeoMeta({
+  title: 'Archyard',
+  ogTitle: 'Archyard',
+  description: 'View your favorite interactions on Archway network',
+  ogDescription: 'View your favorite interactions on Archway network',
+  ogImage: `${getBaseUrl()}/img/og.jpg`,
+  twitterCard: 'summary_large_image',
+})
+
 const { chain: connectedChain, address } = useSharedSigningClient({ restore: true })
 
 // Init value is restored from prev connection, mainnet as default
