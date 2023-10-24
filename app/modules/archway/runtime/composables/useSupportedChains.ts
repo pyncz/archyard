@@ -13,7 +13,7 @@ export const useSupportedChains = () => {
   }
 
   return {
-    chains,
+    chains: chains as ChainId[],
     useSupportedChain,
     supportsChain,
   }

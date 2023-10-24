@@ -3,6 +3,10 @@ import { computedAsync, createSharedComposable, useAsyncState, useLocalStorage }
 import type { Account, ChainInfo } from '../types'
 import { getChainConfig } from '../utils'
 
+interface UseSigningClientOptions {
+  restore?: boolean
+}
+
 const pickupConnection = async (embedded: any, chainId: string, rpc: string) => {
   const offlineSigner = await embedded.getOfflineSignerAuto(chainId)
   return {
@@ -37,10 +41,6 @@ const connectWithWallet = async (key: string, chainInfo: ChainInfo) => {
   return await pickupConnection(embedded, chainInfo.chainId, chainInfo.rpc)
 }
 
-interface UseSigningClientOptions {
-  restore?: boolean
-}
-
 /**
  * Connect to an embedded Cosmos wallet
  * @options @see {@link UseSigningClientOptions}
@@ -58,7 +58,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
   // Connect
   const {
     state: clientPair,
-    execute: executeConnection,
+    execute: executeConnect,
     isLoading: isConnecting,
     error: connectError,
   } = useAsyncState(
@@ -106,7 +106,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
   const isConnected = computed(() => !!clientPair.value?.client)
 
   const connect = async (chainId: ChainId, keys?: string | string[]) => {
-    return await executeConnection(0, chainId, keys)
+    return await executeConnect(0, chainId, keys)
   }
 
   const disconnect = () => {

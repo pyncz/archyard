@@ -1,21 +1,19 @@
 <template>
-  <main class="tw-container tw-w-screen tw-min-h-screen tw-py-12 tw-flex-center">
-    <div>
-      Hey
-      <select v-model="chain">
-        <option value="archway-1">
-          mainnet
-        </option>
-        <option value="constantine-3">
-          testnet
-        </option>
-      </select>
-      <Connect :chain="chain" />
+  <div class="tw-w-screen tw-min-h-screen tw-pb-12 tw-flex tw-flex-col">
+    <div class="tw-container tw-flex-1 tw-flex tw-flex-col">
+      <header class="tw-py-4 tw-justify-end tw-flex tw-flex-col">
+        <select-chain />
+        <selected-address />
+      </header>
+      <main class="tw-py-12 tw-flex-1 tw-flex-center">
+        <div v-if="!address">
+          <address-form />
+          <connect-form />
+        </div>
+        <interactions-chart v-else />
+      </main>
     </div>
-    <div class="tw-max-w-sm">
-      {{ address }}
-    </div>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,8 +26,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-const { chain: connectedChain, address } = useSharedSigningClient({ restore: true })
+const { address } = useAddress()
 
-// Init value is restored from prev connection, mainnet as default
-const chain = ref<ChainId>(connectedChain.value ?? 'archway-1')
+useSharedSigningClient({ restore: true })
 </script>
