@@ -10,7 +10,18 @@ export default defineNuxtConfig({
     },
   },
 
+  vite: {
+    vue: {
+      script: {
+        defineModel: true,
+      },
+    },
+  },
+
   modules: [
+    'nuxt-headlessui',
+    'nuxt-icon',
+
     // performance
     '@nuxtjs/critters',
     '@nuxtjs/fontaine',
