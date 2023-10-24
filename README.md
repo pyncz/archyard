@@ -2,6 +2,9 @@
 
 A little trial app in the context of the Archway blockchain. First of many, probably.
 
+> **Warning**
+> WORK IN PROGRESS. Don't run it pls
+
 ---
 
 
