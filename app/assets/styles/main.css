@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /**
+   * NOTE: Use 'R G B' colors' coldes to be able to set opacity using Tailwind CSS utils
+   * @see https://tailwindcss.com/docs/customizing-colors#using-css-variables
+   */
+  :root {
+    /* base colors */
+    --accent: 236 91 41; /* #EC5B29 */
+
+    --white: 255 255 255;
+    --black: 0 0 0;
+
+    /* theme */
+    --bg-0: var(--white);
+    --bg-1: 241 239 237; /* #F1EFED */
+    --bg-2: 241 239 237;
+    --bg-3: 241 239 237;
+    --bg-error: 255 215 222;
+
+    --text-0: var(--black);
+    --text-1: 54 54 54;
+    --text-2: 119 119 119;
+    --text-3: 194 191 190;
+    --text-error: 255 52 87;
+
+    /* UI elements */
+    --button-bg: var(--black);
+    --button-bg-hover: 12 12 14;
+    --button-bg-active: 24 24 29;
+    --button-text: var(--white);
+  }
+
+  html {
+    background: theme(backgroundColor.r1);
+    color: theme(textColor.r0);
+    font-size: theme(fontSize.lg);
+    line-height: theme(lineHeight.sm);
+    font-family: theme(fontFamily.sans);
+    @screen sm {
+      font-size: theme(fontSize.base);
+    }
+  }
+}
