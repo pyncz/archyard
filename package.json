@@ -1,5 +1,6 @@
 {
   "name": "archyard",
+  "description": "View your favorite interactions on Archway network",
   "private": true,
   "type": "module",
   "author": "Pau Yankovski <https://github.com/pyncz>",
