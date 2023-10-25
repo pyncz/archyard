@@ -5,7 +5,7 @@ import { getChainConfig } from '../utils'
  * @param chainId
  * @returns RPC URL ref for specified chain
  */
-export const useChainConfig = <T extends ChainId | undefined>(
+export const useChainConfig = <T extends ChainId | null | undefined>(
   chainId: MaybeRefOrGetter<T>,
 ) => {
   const config = computed(() => {

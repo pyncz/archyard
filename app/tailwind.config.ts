@@ -53,6 +53,11 @@ export default {
       md: '1.5',
       inherit: 'inherit',
     },
+    opacity: {
+      0: '0',
+      muted: '0.5',
+      full: '1',
+    },
     extend: {
       fontSize: {
         '3/4': '0.75em',

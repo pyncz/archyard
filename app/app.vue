@@ -28,5 +28,6 @@ useSeoMeta({
 
 const { address } = useAddress()
 
-useSharedSigningClient({ restore: true })
+const { restoreConnection } = useSharedSigningClient()
+onMounted(restoreConnection)
 </script>
