@@ -5,14 +5,12 @@ import { getChainConfig } from '../utils'
  * @param chainId
  * @returns RPC URL ref for specified chain
  */
-export const useChainConfig = (
-  chainId: MaybeRefOrGetter<ChainId | undefined>,
+export const useChainConfig = <T extends ChainId | undefined>(
+  chainId: MaybeRefOrGetter<T>,
 ) => {
   const config = computed(() => {
     const id = toValue(chainId)
-    if (id) {
-      return getChainConfig(id)
-    }
+    return getChainConfig(id)
   })
 
   return config
