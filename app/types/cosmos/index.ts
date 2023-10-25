@@ -1,8 +1,4 @@
-import type { Tx, TxResponse } from './tx'
-import type { Pagination } from './pagination'
+export * from './core'
 
-export interface CosmosTxV1Beta1TxsResponse {
-  txs: Tx[]
-  tx_responses: TxResponse[]
-  pagination: Pagination
-}
+// Responses
+export * from './CosmosTxV1Beta1TxsResponse'

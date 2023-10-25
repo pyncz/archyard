@@ -7,8 +7,8 @@
 
     <div :class="{ 'tw-opacity-muted': isPending }">
       Here will be d3 chart
-      <div v-if="data">
-        <div v-for="txRes of data" :key="txRes.txhash">
+      <div v-if="transactions">
+        <div v-for="txRes of transactions" :key="txRes.txhash">
           {{ txRes.txhash }}
         </div>
       </div>
@@ -36,12 +36,31 @@ const chain = useChain()
 const limit = 100
 
 const {
-  data,
+  data: transactions,
   total,
   count,
   error,
   hasNextPage,
   isPending,
   fetchNextPage,
-} = useTransactions(address, chain, { limit })
+} = useTransactions(address, chain, 'tx_responses', { limit })
+
+const data = useAggregatedData(
+  transactions,
+  (txRes) => {
+    const keys = new Set<string>()
+    for (const message of txRes.tx.body.messages) {
+    // associate addresses that sent message to the user
+      if (message.from_address !== address.value) {
+        keys.add(message.from_address)
+      }
+      // associate addresses the user sent message to
+      if (message.to_address !== address.value) {
+        keys.add(message.to_address)
+      }
+    }
+    return Array.from(keys)
+  },
+  txRes => txRes.txhash,
+)
 </script>

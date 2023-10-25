@@ -5,9 +5,12 @@ interface UseTransactionsOptions {
   limit?: number
 }
 
-export const useTransactions = (
+type KeyWithValueType<T, V> = { [P in keyof T]: T[P] extends V ? P : never }[keyof T]
+
+export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsResponse, any[]>>(
   address: MaybeRefOrGetter<string | null | undefined>,
   chain: MaybeRefOrGetter<ChainId | null | undefined>,
+  field: T,
   options?: UseTransactionsOptions,
 ) => {
   const {
@@ -58,12 +61,15 @@ export const useTransactions = (
     enabled: () => !!toValue(address) && !!toValue(chain),
   })
 
-  const txResponses = computed(() => queryState.data.value?.pages.flatMap(page => page.tx_responses))
-  const count = computed(() => txResponses.value?.length)
+  // @ts-expect-error Page typings
+  const data = computed<CosmosTxV1Beta1TxsResponse[typeof field] | undefined>(() => queryState.data.value?.pages.flatMap((page) => {
+    return page[field]
+  }))
+  const count = computed(() => data.value?.length)
 
   return {
     ...queryState,
-    data: txResponses,
+    data,
     count,
     total,
   }
