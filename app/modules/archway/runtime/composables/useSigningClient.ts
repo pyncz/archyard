@@ -50,7 +50,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
   const connectedWith = useLocalStorage<string | null>('connected-with', null)
 
   // string and not ChainId because localStorage key may be changed / added manually
-  const storedChain = useLocalStorage<string | null>('chain', null)
+  const storedChain = useLocalStorage<string | null>('connected-chain', null)
 
   const { useSupportedChain } = useSupportedChains()
   const chain = useSupportedChain(storedChain) // storedChain but null if not supported
