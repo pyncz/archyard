@@ -2,15 +2,23 @@
   <div class="tw-w-screen tw-min-h-screen tw-pb-12 tw-flex tw-flex-col">
     <div class="tw-container tw-flex-1 tw-flex tw-flex-col">
       <header class="tw-py-4 tw-justify-end tw-flex tw-flex-col">
-        <select-chain />
         <selected-address />
+        <select-chain />
       </header>
       <main class="tw-py-12 tw-flex-1 tw-flex-center">
-        <div v-if="!address">
-          <address-form />
-          <connect-form />
-        </div>
-        <interactions-chart v-else />
+        <ClientOnly>
+          <template #fallback>
+            <div>
+              Loading...
+            </div>
+          </template>
+
+          <interactions-chart v-if="address" />
+          <div v-else>
+            <address-form />
+            <connect-form />
+          </div>
+        </ClientOnly>
       </main>
     </div>
   </div>
