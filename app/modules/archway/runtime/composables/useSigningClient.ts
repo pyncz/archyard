@@ -47,7 +47,7 @@ const connectWithWallet = async (key: string, chainInfo: ChainInfo) => {
  * @returns Async state refs with the Archway signing client
  */
 export const useSigningClient = (options?: UseSigningClientOptions) => {
-  const connectedWith = useLocalStorage<string | null>('connected-with', null)
+  const connectedWallet = useLocalStorage<string | null>('connected-wallet', null)
 
   // string and not ChainId because localStorage key may be changed / added manually
   const storedChain = useLocalStorage<string | null>('connected-chain', null)
@@ -74,13 +74,13 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
       }
 
       // reset connection meta
-      connectedWith.value = null
+      connectedWallet.value = null
       storedChain.value = null
 
       for (const walletKey of normalizedWalletOptions) {
         try {
           const connectedClientPair = await connectWithWallet(walletKey, config)
-          connectedWith.value = walletKey
+          connectedWallet.value = walletKey
           storedChain.value = config.chainId
           return connectedClientPair
         } catch (e) {
@@ -115,7 +115,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
 
     // reset state
     clientPair.value = null
-    connectedWith.value = null
+    connectedWallet.value = null
     storedChain.value = null
   }
 
@@ -136,12 +136,12 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
   } = useAsyncState(
     async () => {
       // Try to restore the connection
-      if (connectedWith.value && chain.value) {
+      if (connectedWallet.value && chain.value) {
         try {
           const config = getChainConfig(chain.value)
           if (config) {
             const connectedClientPair = await pickupConnection(
-              (window as any)[connectedWith.value],
+              (window as any)[connectedWallet.value],
               chain.value,
               config.rpc,
             )
@@ -151,7 +151,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
           console.error(e)
 
           // reconnection try failed, reset storage
-          connectedWith.value = null
+          connectedWallet.value = null
           storedChain.value = null
         }
       }
@@ -170,7 +170,7 @@ export const useSigningClient = (options?: UseSigningClientOptions) => {
 
   return {
     client,
-    connectedWith,
+    connectedWallet,
     disconnect,
 
     chain,
