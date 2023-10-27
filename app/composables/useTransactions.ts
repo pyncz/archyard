@@ -34,7 +34,7 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
       baseURL: chainConfigValue.rest,
       params: {
         'pagination.limit': limit,
-        'pagination.key': pageParam,
+        'pagination.offset': pageParam,
         'events': [
           // TODO: figure out how to send OR and not AND
           filterValue === 'received'
@@ -62,8 +62,11 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
   const queryState = useInfiniteQuery({
     queryKey,
     queryFn: fetchTxs,
-    initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage?.pagination.next_key,
+    initialPageParam: 0,
+    getNextPageParam: (_, allPages) => {
+      // get new offset
+      return allPages.reduce((size, page) => size + page[field].length, 0)
+    },
     enabled: () => !!toValue(address) && !!toValue(chain),
   })
 
