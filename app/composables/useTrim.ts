@@ -18,15 +18,15 @@ interface UseTrimOptions {
   filler?: string
 }
 
-export const useTrim = (
-  value: MaybeRefOrGetter<string>,
+export const useTrim = <T extends string | null | undefined>(
+  value: MaybeRefOrGetter<T>,
   options: UseTrimOptions,
 ) => {
   const {
     start = 0,
     end = 0,
     filler = '...',
-  } = options ?? {}
+  } = options
 
   if (!start && !end) {
     throw new Error('Specify at least one of the `start` and `end` options!')
@@ -35,11 +35,11 @@ export const useTrim = (
   return computed(() => {
     const v = toValue(value)
 
-    // no need to trim, the value is short enough already
-    if (v.length <= filler.length + start + end) {
-      return v
-    }
-
-    return `${v.slice(0, start)}${filler}${v.slice(-end)}`
+    return (
+      // check if there's need to trim, or the value is short enough already
+      !v || v.length <= filler.length + start + end
+        ? v
+        : `${v.slice(0, start)}${filler}${v.slice(-end)}`
+    ) as T extends string ? string : T
   })
 }

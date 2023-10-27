@@ -11,5 +11,5 @@ const props = defineProps<{
   address: string
 }>()
 
-const formattedAddress = useTrim(() => props.address, { start: 12, end: 5 })
+const formattedAddress = useFormatAddress(() => props.address)
 </script>

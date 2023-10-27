@@ -1,5 +1,8 @@
 <template>
   <HeadlessListbox v-model="value">
+    <HeadlessListboxLabel v-if="label">
+      {{ label }}
+    </HeadlessListboxLabel>
     <HeadlessListboxButton>
       <slot name="selected" v-bind="{ value }">
         {{ value }}
@@ -19,8 +22,9 @@
   </HeadlessListbox>
 </template>
 
-<script setup lang="ts" generic="TValue extends string | number | boolean | object | null | undefined, TOption">
+<script setup lang="ts" generic="TValue extends string | number | boolean | Record<string, any> | undefined, TOption">
 interface Props {
+  label?: string
   options: TOption[]
   getValue: (o: TOption) => TValue
   getKey?: (o: TOption) => string

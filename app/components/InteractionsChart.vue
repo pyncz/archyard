@@ -31,6 +31,8 @@
 
 <script setup lang="ts">
 const { address } = useAddress()
+const settings = useSettings()
+
 const chain = useChain()
 
 const limit = 100
@@ -43,7 +45,13 @@ const {
   hasNextPage,
   isPending,
   fetchNextPage,
-} = useTransactions(address, chain, 'tx_responses', { limit })
+} = useTransactions(
+  address,
+  chain,
+  () => settings.value.filter,
+  'tx_responses',
+  { limit },
+)
 
 const data = useAggregatedData(
   transactions,
