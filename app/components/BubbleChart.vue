@@ -14,48 +14,51 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import { useElementSize, watchDebounced } from '@vueuse/core'
 import * as d3 from 'd3'
 
-interface BubbleChartNode {
-  name: string
-  value: number
-}
-
-interface BubbleChartDatum {
-  value?: number
-  name?: string
-  children?: BubbleChartNode[]
+type BubbleChartDatum<TData extends Record<string, any>> = TData & {
+  children?: BubbleChartDatum<TData>[]
 }
 
 interface Props {
   padding?: number
-  data: BubbleChartNode[]
+  data: BubbleChartDatum<T>[]
+  getValue: (d: BubbleChartDatum<T>) => number
+  getLabel?: (d: BubbleChartDatum<T>) => string
+  getGroup?: (d: BubbleChartDatum<T>) => string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   padding: 5,
 })
 
+const getStringValue = (d: BubbleChartDatum<T>) => props.getValue(d).toString()
+const {
+  getValue,
+  getLabel = getStringValue,
+  getGroup = getStringValue,
+} = props
+
 const chart = ref<SVGElement | null>(null)
 const viewportRef = ref<HTMLDivElement | null>(null)
 const { width, height } = useElementSize(viewportRef)
 
 const color = d3.scaleOrdinal(d3.schemeTableau10)
-const highlightedData = ref<BubbleChartDatum | null>(null)
+const highlightedData = ref<Ref<BubbleChartDatum<T>> | null>(null)
 
 watchDebounced([width, height, viewportRef, chart, () => props.data, () => props.padding], () => {
   if (!width.value || !height.value || !viewportRef.value || !chart.value) {
     return
   }
 
-  const pack = d3.pack<BubbleChartDatum>()
+  const pack = d3.pack<BubbleChartDatum<T>>()
     .size([width.value, height.value])
     .padding(props.padding)
 
   const root = pack(
-    d3.hierarchy<BubbleChartDatum>({ children: props.data }).sum(d => d.value ?? 0),
+    d3.hierarchy({ children: props.data } as BubbleChartDatum<T>).sum(d => getValue(d)),
   )
 
   const svg = d3.select(chart.value)
@@ -67,12 +70,11 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .selectAll()
     .data(root.leaves())
     .join('g')
-    .attr('class', 'bubble')
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
   node.append('circle')
     .attr('class', 'tw-stroke-accent/0 tw-stroke-2 tw-duration-100 hover:tw-stroke-accent')
-    .attr('fill', d => color(d.data.name ?? ''))
+    .attr('fill', d => color(getGroup(d.data)))
     .attr('r', d => d.r)
     .on('mouseover', (_, d) => {
       highlightedData.value = d.data
@@ -83,7 +85,7 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
 
   const text = node.append('text')
     .attr('clip-path', d => `circle(${d.r})`)
-    .attr('title', d => d.data.name ?? '')
+    .text(d => getLabel(d.data))
 
   text.selectAll()
     .data(d => `${d.value}`)
@@ -91,6 +93,5 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .attr('class', 'tw-hidden xs:tw-inline')
     .attr('x', 0)
     .attr('y', (_, i, nodes) => `${i - nodes.length / 2 + 0.5}em`)
-    .text(d => d)
 }, { debounce: 100 })
 </script>

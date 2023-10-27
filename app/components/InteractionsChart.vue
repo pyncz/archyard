@@ -17,17 +17,20 @@
 
       <template v-else>
         <div v-if="isXsScreen" class="tw-space-y-6">
-          <template v-for="item of sortedData" :key="item.name">
+          <template v-for="d of sortedData" :key="d.name">
             <div>
-              Tx by {{ item.name }}
+              Tx by {{ d.name }}
             </div>
           </template>
         </div>
         <bubble-chart
           v-else
           v-slot="{ highlightedData }"
-          class="tw-absolute tw-inset-0"
           :data="sortedData"
+          :get-value="d => d.value"
+          :get-group="d => d.name"
+          :get-label="d => d.value.toString()"
+          class="tw-absolute tw-inset-0"
         >
           <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-bg-white">
             {{ highlightedData }}
