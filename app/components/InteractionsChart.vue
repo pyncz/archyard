@@ -14,16 +14,26 @@
       <div v-else-if="!aggregatedTxs.size">
         No interactions with other addresses!
       </div>
-      <bubble-chart
-        v-else
-        v-slot="{ highlightedData }"
-        class="tw-absolute tw-inset-0"
-        :data="data"
-      >
-        <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-bg-white">
-          {{ highlightedData }}
+
+      <template v-else>
+        <div v-if="isXsScreen" class="tw-space-y-6">
+          <template v-for="item of sortedData" :key="item.name">
+            <div>
+              Tx by {{ item.name }}
+            </div>
+          </template>
         </div>
-      </bubble-chart>
+        <bubble-chart
+          v-else
+          v-slot="{ highlightedData }"
+          class="tw-absolute tw-inset-0"
+          :data="sortedData"
+        >
+          <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-bg-white">
+            {{ highlightedData }}
+          </div>
+        </bubble-chart>
+      </template>
     </div>
 
     <div>
@@ -57,6 +67,9 @@ const chain = useChain()
 const chainInfo = useChainConfig(chain)
 
 const limit = 100
+
+const breakpoints = useTailwindBreakpoints()
+const isXsScreen = breakpoints.smaller('xs')
 
 const {
   data: transactions,
@@ -102,5 +115,9 @@ const data = computed(() => {
     nodes.push({ name: addr, value: txs.length })
   }
   return nodes
+})
+
+const sortedData = computed(() => {
+  return data.value.sort((a, b) => a.value > b.value ? -1 : a.value < b.value ? 1 : 0)
 })
 </script>
