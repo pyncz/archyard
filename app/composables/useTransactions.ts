@@ -50,8 +50,10 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
     return res
   }
 
-  // Handle a unique address + chain combination as a new query
-  const queryKey = computed(() => [toValue(address), toValue(chain)])
+  // Handle a unique address + chain + filter combination as a new query
+  const queryKey = computed(() => {
+    return [toValue(address), toValue(chain), toValue(filter)]
+  })
   // Also, reset results' total when new query is about to fire
   watch(queryKey, () => {
     total.value = null
@@ -69,12 +71,26 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
   const data = computed<CosmosTxV1Beta1TxsResponse[typeof field] | undefined>(() => queryState.data.value?.pages.flatMap((page) => {
     return page[field]
   }))
-  const count = computed(() => data.value?.length)
+  const count = computed(() => data.value?.length ?? null)
+
+  const restCount = computed(() => {
+    return total.value && count.value
+      ? total.value - count.value
+      : null
+  })
+
+  const nextPageSize = computed(() => {
+    return restCount.value
+      ? restCount.value > limit ? limit : restCount.value
+      : null
+  })
 
   return {
     ...queryState,
     data,
     count,
+    restCount,
+    nextPageSize,
     total,
   }
 }

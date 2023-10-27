@@ -9,9 +9,24 @@ export interface Tx {
   }
 }
 
+export interface EventAttribute {
+  key: string
+  value: string
+}
+
+export interface LogEvent {
+  type: string
+  attributes: EventAttribute[]
+}
+
+export interface Log {
+  events: LogEvent[]
+}
+
 export interface TxResponse {
   tx: Tx
   txhash: string
   timestamp: string
   height: string
+  logs: Log[]
 }

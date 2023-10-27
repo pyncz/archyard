@@ -59,6 +59,9 @@ export default {
       full: '1',
     },
     extend: {
+      screens: {
+        xs: '400px',
+      },
       fontSize: {
         '3/4': '0.75em',
         '7/8': '0.875em',

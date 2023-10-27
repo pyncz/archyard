@@ -1,24 +1,44 @@
 <template>
-  <div v-if="address">
+  <div v-if="address" class="tw-w-full tw-flex-1 tw-flex tw-flex-col">
     <div>
       Favorite interactions
-      <address-representation :address="address" />
     </div>
 
-    <div :class="{ 'tw-opacity-muted': isPending }">
-      Here will be d3 chart
-      <div v-if="transactions">
-        <div v-for="txRes of transactions" :key="txRes.txhash">
-          {{ txRes.txhash }}
-        </div>
+    <div class="tw-relative tw-flex-1 tw-duration-300">
+      <div v-if="isLoading">
+        Loading...
       </div>
+      <div v-else-if="!transactions?.length">
+        No transfer transactions on {{ chainInfo.chainName }}!
+      </div>
+      <div v-else-if="!aggregatedTxs.size">
+        No interactions with other addresses!
+      </div>
+      <bubble-chart
+        v-else
+        v-slot="{ highlightedData }"
+        class="tw-absolute tw-inset-0"
+        :data="data"
+      >
+        <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-bg-white">
+          {{ highlightedData }}
+        </div>
+      </bubble-chart>
     </div>
 
     <div>
       <div class="tw-flex-center-y tw-gap-4">
-        <button :disabled="hasNextPage" @click="fetchNextPage()">
-          Fetch {{ limit }} older txs
+        <button
+          v-if="hasNextPage"
+          :disabled="isFetching"
+          @click="fetchNextPage()"
+        >
+          Fetch {{ nextPageSize }} older txs
         </button>
+        <div v-else>
+          All fetched!
+        </div>
+
         <div v-if="total !== null">
           <p>{{ total }} total</p>
           <p>{{ count }} fetched</p>
@@ -34,6 +54,7 @@ const { address } = useAddress()
 const settings = useSettings()
 
 const chain = useChain()
+const chainInfo = useChainConfig(chain)
 
 const limit = 100
 
@@ -41,9 +62,11 @@ const {
   data: transactions,
   total,
   count,
+  nextPageSize,
+  isFetching,
   error,
   hasNextPage,
-  isPending,
+  isLoading,
   fetchNextPage,
 } = useTransactions(
   address,
@@ -53,22 +76,31 @@ const {
   { limit },
 )
 
-const data = useAggregatedData(
+const aggregatedTxs = useAggregatedData(
   transactions,
   (txRes) => {
     const keys = new Set<string>()
-    for (const message of txRes.tx.body.messages) {
-    // associate addresses that sent message to the user
-      if (message.from_address !== address.value) {
-        keys.add(message.from_address)
+    for (const event of txRes.logs[0].events) {
+      if (event.type !== 'transfer') {
+        continue
       }
-      // associate addresses the user sent message to
-      if (message.to_address !== address.value) {
-        keys.add(message.to_address)
+
+      for (const { key, value } of event.attributes) {
+        if (['recipient', 'sender'].includes(key) && value !== address.value) {
+          keys.add(value)
+        }
       }
     }
     return Array.from(keys)
   },
   txRes => txRes.txhash,
 )
+
+const data = computed(() => {
+  const nodes: { name: string; value: number }[] = []
+  for (const [addr, txs] of Array.from(aggregatedTxs.value)) {
+    nodes.push({ name: addr, value: txs.length })
+  }
+  return nodes
+})
 </script>

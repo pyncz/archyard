@@ -2,13 +2,11 @@
   <div class="tw-w-screen tw-min-h-screen tw-pb-12 tw-flex tw-flex-col">
     <div class="tw-container tw-flex-1 tw-flex tw-flex-col">
       <header class="tw-py-4 tw-justify-end tw-flex tw-flex-col">
-        <template v-if="address">
-          <selected-address />
-          <select-filter />
-        </template>
         <select-chain />
+        <selected-address />
+        <select-filter />
       </header>
-      <main class="tw-py-12 tw-flex-1 tw-flex-center">
+      <main class="tw-py-12 tw-flex-1 tw-flex-center tw-flex tw-flex-col">
         <ClientOnly>
           <template #fallback>
             <div>
