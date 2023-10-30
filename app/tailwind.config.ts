@@ -72,6 +72,7 @@ export default {
       fadein: 'fadein 500ms ease-in forwards',
       closup: 'closup 500ms ease-in forwards',
       spread: 'spread 500ms ease-out forwards',
+      unfold: 'unfold 300ms ease-out forwards',
     },
     keyframes: {
       fadein: {
@@ -83,8 +84,12 @@ export default {
         '50%': { transform: 'scale(1.1)' },
       },
       spread: {
-        '0%': { inset: '0' },
-        '100%': { inset: '-0.5rem' },
+        '0%': { margin: '0', padding: '0' },
+        '100%': { margin: '-0.5rem', padding: '0.5rem' },
+      },
+      unfold: {
+        '0%': { width: '0px', opacity: '0' },
+        '100%': { width: '4rem', opacity: '1' },
       },
     },
     extend: {
@@ -129,7 +134,7 @@ export default {
           '@apply tw-duration-150 tw-circle-[1.25em] tw-flex-center tw-bg-r3 tw-text-r2 hover:tw-bg-r4 hover:tw-text-r1': {},
         },
         '.modal': {
-          '@apply tw-relative before:tw-cover before:tw-border before:tw-border-r4 before:tw-shadow-lg before:tw-border-opacity-soft before:tw-bg-white before:tw-rounded-xl before:tw-z-muted': {},
+          '@apply tw-relative before:tw-cover tw-border tw-border-r4 tw-shadow-lg tw-border-opacity-muted before:tw-bg-white tw-rounded-xl before:tw-z-muted tw-overflow-hidden': {},
         },
         '.button': {
           ...uiElement,

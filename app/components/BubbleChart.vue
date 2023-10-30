@@ -1,6 +1,6 @@
 <template>
   <div ref="viewportRef">
-    <slot v-bind="{ highlightedData }" />
+    <slot v-bind="{ highlightedData, throttledHighlightedData }" />
     <svg
       ref="chart"
       class="tw-text-[10px]"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { useElementSize, watchDebounced } from '@vueuse/core'
+import { refThrottled, useElementSize, watchDebounced } from '@vueuse/core'
 import * as d3 from 'd3'
 
 type BubbleChartDatum<TData extends Record<string, any>> = TData & {
@@ -47,6 +47,8 @@ const { width, height } = useElementSize(viewportRef)
 
 const color = d3.scaleOrdinal(d3.schemePastel2)
 const highlightedData = ref<Ref<BubbleChartDatum<T>> | null>(null)
+
+const throttledHighlightedData = refThrottled(highlightedData, 100)
 
 watchDebounced([width, height, viewportRef, chart, () => props.data, () => props.padding], () => {
   if (!width.value || !height.value || !viewportRef.value || !chart.value) {
