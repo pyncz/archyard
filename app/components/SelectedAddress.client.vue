@@ -9,15 +9,7 @@
       <Icon v-else name="iconoir:arrow-left" />
     </button>
     <div class="tw-py-0.5 tw-overflow-hidden">
-      <!-- Render just css-truncated address on small screens -->
-      <address-representation
-        class="tw-hidden sm:tw-block"
-        :address="address"
-      />
-      <p class="tw-font-mono tw-leading-1 tw-text-7/8 sm:tw-hidden tw-truncate">
-        {{ address }}
-      </p>
-
+      <address-representation :address="address" />
       <small class="tw-inline-flex tw-text-r3 tw-leading-sm">{{ isConnected ? 'Connected' : 'Selected' }}</small>
     </div>
   </div>

@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <p class="tw-font-mono tw-leading-1 tw-text-7/8">
-      {{ formattedAddress }}
-    </p>
-  </div>
+  <!-- Render just css-truncated address on small screens -->
+  <p class="tw-hidden sm:tw-block tw-font-mono tw-leading-1 tw-text-7/8">
+    {{ formattedAddress }}
+  </p>
+  <p class="tw-font-mono tw-leading-1 tw-text-7/8 sm:tw-hidden tw-truncate">
+    {{ address }}
+  </p>
 </template>
 
 <script setup lang="ts">
