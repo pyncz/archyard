@@ -1,7 +1,12 @@
 <template>
   <div v-if="address" class="tw-inline-flex tw-gap-2.5 tw-overflow-hidden">
-    <button class="tw-control tw-text-lg" @click="resetAddress">
-      <Icon name="iconoir:cancel" />
+    <button
+      class="tw-control tw-text-lg"
+      :title="isConnected ? 'Disconnect' : 'Back'"
+      @click="resetAddress"
+    >
+      <Icon v-if="isConnected" name="iconoir:cancel" />
+      <Icon v-else name="iconoir:arrow-left" />
     </button>
     <div class="tw-py-0.5 tw-overflow-hidden">
       <!-- Render just css-truncated address on small screens -->
