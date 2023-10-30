@@ -1,9 +1,5 @@
 <template>
   <div v-if="address" class="tw-w-full tw-flex-1 tw-flex tw-flex-col">
-    <div>
-      Favorite interactions
-    </div>
-
     <div class="tw-relative tw-flex-1 tw-duration-300">
       <div v-if="isLoading">
         Loading...
@@ -16,13 +12,17 @@
       </div>
 
       <template v-else>
-        <div v-if="isXsScreen" class="tw-space-y-6">
-          <template v-for="d of sortedData" :key="d.name">
-            <div>
-              Tx by {{ d.name }}
-            </div>
-          </template>
-        </div>
+        <section v-if="isXsScreen" class="tw-space-y-1">
+          <h1>Favorite interactions</h1>
+          <div class="tw-space-y-1">
+            <peer-account-representation
+              v-for="d of sortedData"
+              :key="d.name"
+              class="before:tw-shadow-sm"
+              :data="d"
+            />
+          </div>
+        </section>
         <bubble-chart
           v-else
           v-slot="{ highlightedData }"
@@ -32,18 +32,28 @@
           :get-label="d => d.value.toString()"
           class="tw-cover"
         >
-          <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-inset-x-0 tw-flex-center-x">
-            <div class="tw-modal">
-              test
-              {{ highlightedData }}
+          <transition
+            enter-from-class="tw-opacity-0 tw--translate-y-4 tw-scale-90"
+            enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+            leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+            leave-to-class="tw-opacity-0 tw-translate-y-4 tw-scale-90"
+          >
+            <div
+              v-if="highlightedData"
+              class="tw-absolute tw-pointer-events-none tw-duration-150 tw-z-[1] tw-top-0 tw-inset-x-0 tw-flex-center-x"
+            >
+              <peer-account-representation
+                class="tw-max-w-sm"
+                :data="highlightedData"
+              />
             </div>
-          </div>
+          </transition>
         </bubble-chart>
       </template>
     </div>
 
     <div class="tw-fixed tw-bottom-0 tw-py-8 tw-px-4 tw-inset-x-0 tw-flex-center tw-flex-col tw-gap-3 tw-text-center">
-      <div class="tw-modal before:tw-duration-300 before:tw-rounded-full tw-flex-center-y before:tw-z-muted before:tw-animate-spread before:[animation-duration:150ms] before:[animation-delay:1s] before:tw-opacity-soft hover:before:tw-opacity-full">
+      <div class="tw-modal before:tw-duration-300 before:tw-rounded-full tw-flex-center-y before:tw-animate-spread before:[animation-duration:150ms] before:[animation-delay:1s] before:tw-opacity-soft hover:before:tw-opacity-full">
         <count-representation
           v-if="total !== null && count !== null"
           class="tw-text-r1 tw-w-16 tw-px-2"
@@ -61,7 +71,7 @@
           <span class="tw-hidden xs:tw-inline">{{ nextPageSize }}</span>
           older txs
         </button>
-        <div v-else class="tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r3 tw-text-r2">
+        <div v-else class="tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
           All fetched!
         </div>
 

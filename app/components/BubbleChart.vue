@@ -73,7 +73,7 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
   node.append('circle')
-    .attr('class', 'tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4')
+    .attr('class', 'tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4 tw-opacity-soft hover:tw-opacity-full')
     .attr('fill', d => color(getGroup(d.data)))
     .attr('r', d => d.r)
     .on('mouseover', (_, d) => {

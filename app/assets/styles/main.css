@@ -38,15 +38,22 @@
     --button-text: var(--white);
   }
 
+  ::selection {
+    @apply tw-bg-accent-r2 tw-text-black;
+  }
+
   html {
     @apply tw-text-r0 tw-bg-r1 tw-font-sans tw-leading-sm tw-text-lg sm:tw-text-base;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply tw-text-r1 tw-font-sans tw-font-semibold !tw-leading-xs tw-mb-[1em];
+    @apply tw-font-sans tw-font-semibold !tw-leading-xs tw-mb-[1em];
+  }
+  h2, h3, h4, h5, h6 {
+    @apply tw-text-r1;
   }
   h1 {
-    @apply tw-text-lg;
+    @apply tw-text-xl;
   }
   h2 {
     @apply tw-text-base;

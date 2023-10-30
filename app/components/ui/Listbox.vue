@@ -26,7 +26,7 @@
         leave-to-class="tw-opacity-0"
       >
         <HeadlessListboxOptions
-          class="tw-absolute tw-space-y-1 tw-w-full tw-mt-1 tw-max-h-60 tw-overflow-auto tw-rounded-ui tw-bg-r2 tw-p-1 tw-shadow-lg tw-border tw-border-r4 !tw-outline-none tw-text-sm"
+          class="tw-absolute tw-space-y-1 tw-z-[10] tw-w-full tw-mt-1 tw-max-h-60 tw-overflow-auto tw-rounded-ui tw-bg-r2 tw-p-1 tw-shadow-lg tw-border tw-border-r4 !tw-outline-none tw-text-sm"
         >
           <HeadlessListboxOption
             v-for="option in options"

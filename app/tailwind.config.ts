@@ -129,7 +129,7 @@ export default {
           '@apply tw-duration-150 tw-circle-[1.25em] tw-flex-center tw-bg-r3 tw-text-r2 hover:tw-bg-r4 hover:tw-text-r1': {},
         },
         '.modal': {
-          '@apply tw-relative before:tw-cover before:tw-border before:tw-border-r4 before:tw-shadow-lg before:tw-border-opacity-soft before:tw-bg-white before:tw-rounded-xl': {},
+          '@apply tw-relative before:tw-cover before:tw-border before:tw-border-r4 before:tw-shadow-lg before:tw-border-opacity-soft before:tw-bg-white before:tw-rounded-xl before:tw-z-muted': {},
         },
         '.button': {
           ...uiElement,
