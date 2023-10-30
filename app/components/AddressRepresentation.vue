@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="tw-font-mono tw-text-7/8">
+    <p class="tw-font-mono tw-leading-1 tw-text-7/8">
       {{ formattedAddress }}
     </p>
   </div>

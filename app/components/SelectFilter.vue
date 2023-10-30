@@ -1,14 +1,11 @@
 <template>
   <ui-radio
-    v-slot="{ option, checked }"
+    v-slot="{ option }"
     v-model="settings.filter"
     :options="filters"
     :get-value="o => o"
   >
-    <select-filter-option
-      :class="{ 'bg-blue-200': checked }"
-      :value="option"
-    />
+    <select-filter-option :value="option" />
   </ui-radio>
 </template>
 

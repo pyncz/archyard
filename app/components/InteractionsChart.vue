@@ -30,32 +30,48 @@
           :get-value="d => d.value"
           :get-group="d => d.name"
           :get-label="d => d.value.toString()"
-          class="tw-absolute tw-inset-0"
+          class="tw-cover"
         >
-          <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-bg-white">
-            {{ highlightedData }}
+          <div v-if="highlightedData" class="tw-absolute tw-top-0 tw-inset-x-0 tw-flex-center-x">
+            <div class="tw-modal">
+              test
+              {{ highlightedData }}
+            </div>
           </div>
         </bubble-chart>
       </template>
     </div>
 
-    <div>
-      <div class="tw-flex-center-y tw-gap-4">
+    <div class="tw-fixed tw-bottom-0 tw-py-8 tw-px-4 tw-inset-x-0 tw-flex-center tw-flex-col tw-gap-3 tw-text-center">
+      <div class="tw-modal before:tw-duration-300 before:tw-rounded-full tw-flex-center-y before:tw-z-muted before:tw-animate-spread before:[animation-duration:150ms] before:[animation-delay:1s] before:tw-opacity-soft hover:before:tw-opacity-full">
+        <count-representation
+          v-if="total !== null && count !== null"
+          class="tw-text-r1 tw-w-16 tw-px-2"
+          label="total"
+        >
+          {{ total }}
+        </count-representation>
+
         <button
           v-if="hasNextPage"
-          :disabled="isFetching"
+          class="tw-button tw-whitespace-pre-wrap tw-button-primary tw-rounded-full tw-h-12"
           @click="fetchNextPage()"
         >
-          Fetch {{ nextPageSize }} older txs
+          Fetch
+          <span class="tw-hidden xs:tw-inline">{{ nextPageSize }}</span>
+          older txs
         </button>
-        <div v-else>
+        <div v-else class="tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r3 tw-text-r2">
           All fetched!
         </div>
 
-        <div v-if="total !== null">
-          <p>{{ total }} total</p>
-          <p>{{ count }} fetched</p>
-        </div>
+        <count-representation
+          v-if="total !== null && count !== null"
+          class="tw-text-r1 tw-w-16 tw-px-2"
+          label="fetched"
+        >
+          {{ count }}
+        </count-representation>
       </div>
       <error-message :error="error" />
     </div>
@@ -79,7 +95,6 @@ const {
   total,
   count,
   nextPageSize,
-  isFetching,
   error,
   hasNextPage,
   isLoading,

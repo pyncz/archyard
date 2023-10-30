@@ -88,12 +88,15 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
       : null
   })
 
+  const hasNextPage = computed(() => !!nextPageSize.value)
+
   return {
     ...queryState,
     data,
     count,
     restCount,
     nextPageSize,
+    hasNextPage,
     total,
   }
 }

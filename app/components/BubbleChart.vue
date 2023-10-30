@@ -45,7 +45,7 @@ const chart = ref<SVGElement | null>(null)
 const viewportRef = ref<HTMLDivElement | null>(null)
 const { width, height } = useElementSize(viewportRef)
 
-const color = d3.scaleOrdinal(d3.schemeTableau10)
+const color = d3.scaleOrdinal(d3.schemePastel2)
 const highlightedData = ref<Ref<BubbleChartDatum<T>> | null>(null)
 
 watchDebounced([width, height, viewportRef, chart, () => props.data, () => props.padding], () => {
@@ -73,7 +73,7 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
   node.append('circle')
-    .attr('class', 'tw-stroke-accent/0 tw-stroke-2 tw-duration-100 hover:tw-stroke-accent')
+    .attr('class', 'tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4')
     .attr('fill', d => color(getGroup(d.data)))
     .attr('r', d => d.r)
     .on('mouseover', (_, d) => {
@@ -85,12 +85,12 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
 
   const text = node.append('text')
     .attr('clip-path', d => `circle(${d.r})`)
+    .attr('class', 'tw-hidden sm:tw-inline tw-pointer-events-none')
     .text(d => getLabel(d.data))
 
   text.selectAll()
     .data(d => `${d.value}`)
     .join('tspan')
-    .attr('class', 'tw-hidden xs:tw-inline')
     .attr('x', 0)
     .attr('y', (_, i, nodes) => `${i - nodes.length / 2 + 0.5}em`)
 }, { debounce: 100 })

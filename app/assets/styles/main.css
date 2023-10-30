@@ -9,7 +9,9 @@
    */
   :root {
     /* base colors */
-    --accent: 236 91 41; /* #EC5B29 */
+    --accent-0: 236 91 41; /* #EC5B29 */
+    --accent-1: 255 164 113; /* #FFA471 */
+    --accent-2: 255 216 200; /* #FFD8C8 */
 
     --white: 255 255 255;
     --black: 0 0 0;
@@ -17,14 +19,16 @@
     /* theme */
     --bg-0: var(--white);
     --bg-1: 241 239 237; /* #F1EFED */
-    --bg-2: 241 239 237;
-    --bg-3: 241 239 237;
+    --bg-2: 235 233 231;
+    --bg-3: 228 226 224;
+    --bg-4: 219 217 216;
     --bg-error: 255 215 222;
 
     --text-0: var(--black);
     --text-1: 54 54 54;
     --text-2: 119 119 119;
     --text-3: 194 191 190;
+    --text-4: 219 217 216;
     --text-error: 255 52 87;
 
     /* UI elements */
@@ -35,13 +39,22 @@
   }
 
   html {
-    background: theme(backgroundColor.r1);
-    color: theme(textColor.r0);
-    font-size: theme(fontSize.lg);
-    line-height: theme(lineHeight.sm);
-    font-family: theme(fontFamily.sans);
-    @screen sm {
-      font-size: theme(fontSize.base);
-    }
+    @apply tw-text-r0 tw-bg-r1 tw-font-sans tw-leading-sm tw-text-lg sm:tw-text-base;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply tw-text-r1 tw-font-sans tw-font-semibold !tw-leading-xs tw-mb-[1em];
+  }
+  h1 {
+    @apply tw-text-lg;
+  }
+  h2 {
+    @apply tw-text-base;
+  }
+  h3 {
+    @apply tw-text-sm;
+  }
+  h4, h5, h6 {
+    @apply tw-text-xs;
   }
 }

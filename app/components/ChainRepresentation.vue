@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- TODO: Add chain icon -->
-    <p class="tw-font-mono tw-text-7/8">
+    <p class="tw-font-mono tw-text-7/8 tw-truncate">
       {{ chainConfig?.chainName }}
     </p>
   </div>

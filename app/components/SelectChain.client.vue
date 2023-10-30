@@ -1,7 +1,12 @@
 <template>
-  <ui-listbox v-model="selectedChain" :options="chains" :get-value="o => o">
+  <ui-listbox
+    v-model="selectedChain"
+    :options="chains"
+    :get-value="o => o"
+    class="tw-w-36"
+  >
     <template #selected="{ value }">
-      <chain-representation v-if="value" :chain="value" />
+      <chain-representation v-if="value" :chain="value" class="tw-truncate" />
     </template>
     <template #option="{ option }">
       <chain-representation :chain="option" />
