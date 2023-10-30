@@ -1,6 +1,6 @@
 <template>
   <div ref="viewportRef">
-    <slot v-bind="{ highlightedData, throttledHighlightedData }" />
+    <slot v-bind="{ highlightedData, throttledHighlightedData, copied }" />
     <svg
       ref="chart"
       class="tw-text-[10px]"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { refThrottled, useElementSize, watchDebounced } from '@vueuse/core'
+import { refThrottled, useClipboard, useElementSize, watchDebounced } from '@vueuse/core'
 import * as d3 from 'd3'
 
 type BubbleChartDatum<TData extends Record<string, any>> = TData & {
@@ -44,6 +44,8 @@ const {
 const chart = ref<SVGElement | null>(null)
 const viewportRef = ref<HTMLDivElement | null>(null)
 const { width, height } = useElementSize(viewportRef)
+
+const { copy, copied } = useClipboard()
 
 const color = d3.scaleOrdinal(d3.schemePastel2)
 const highlightedData = ref<Ref<BubbleChartDatum<T>> | null>(null)
@@ -75,7 +77,7 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
   node.append('circle')
-    .attr('class', 'tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4 tw-opacity-soft hover:tw-opacity-full')
+    .attr('class', 'tw-cursor-pointer tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4 tw-opacity-soft hover:tw-opacity-full')
     .attr('fill', d => color(getGroup(d.data)))
     .attr('r', d => d.r)
     .on('mouseover', (_, d) => {
@@ -83,6 +85,9 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     })
     .on('mouseout', () => {
       highlightedData.value = null
+    })
+    .on('click', (_, d) => {
+      copy(d.data.name)
     })
 
   const text = node.append('text')

@@ -20,6 +20,7 @@
             <peer-account-representation
               v-for="d of sortedData"
               :key="d.name"
+              with-copy
               class="before:tw-shadow-sm"
               :data="d"
             />
@@ -27,29 +28,39 @@
         </section>
         <bubble-chart
           v-else
-          v-slot="{ throttledHighlightedData }"
+          v-slot="{ throttledHighlightedData, copied }"
           :data="sortedData"
           :get-value="d => d.value"
           :get-group="d => d.name"
           :get-label="d => d.value.toString()"
           class="tw-cover"
         >
-          <transition
-            enter-from-class="tw-opacity-0 tw--translate-y-2 tw-scale-90"
-            enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
-            leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
-            leave-to-class="tw-opacity-0 tw-translate-y-4 tw-scale-90"
-          >
-            <div
-              v-if="throttledHighlightedData"
-              class="tw-absolute tw-pointer-events-none tw-duration-100 tw-z-[1] tw-top-0 tw-inset-x-0 tw-flex-center-x"
+          <div class="tw-absolute tw-pointer-events-none tw-duration-100 tw-z-[1] tw-top-0 tw-inset-x-0 tw-flex-center-y tw-flex-col">
+            <hint-message class="tw-mb-1 tw--mt-4 tw-max-w-xs tw-mx-auto">
+              <template #icon>
+                <Icon name="iconoir:copy" />
+              </template>
+              <template v-if="copied">
+                Copied!
+              </template>
+              <template v-else>
+                Click on the circle to copy address.
+              </template>
+            </hint-message>
+
+            <transition
+              enter-from-class="tw-opacity-0 tw--translate-y-2 tw-scale-90"
+              enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+              leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+              leave-to-class="tw-opacity-0 tw-translate-y-4 tw-scale-90"
             >
               <peer-account-representation
+                v-if="throttledHighlightedData"
                 class="tw-max-w-sm"
                 :data="throttledHighlightedData"
               />
-            </div>
-          </transition>
+            </transition>
+          </div>
         </bubble-chart>
       </template>
     </div>
@@ -74,19 +85,20 @@
           leave-active-class="tw-duration-500"
           leave-to-class="tw-opacity-0"
         >
-          <div v-if="isLoading" class="tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
+          <div v-if="isLoading" class="tw-relative tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
             Loading...
           </div>
           <button
             v-else-if="hasNextPage"
             class="tw-button tw-whitespace-pre-wrap tw-button-primary tw-rounded-full tw-h-12"
+            :disabled="isPending"
             @click="fetchNextPage()"
           >
             Fetch
             <span class="tw-hidden xs:tw-inline">{{ nextPageSize }}</span>
             older txs
           </button>
-          <div v-else class="tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
+          <div v-else class="tw-relative tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
             All fetched!
           </div>
         </transition>
@@ -123,6 +135,7 @@ const {
   count,
   nextPageSize,
   error,
+  isPending,
   hasNextPage,
   isLoading,
   fetchNextPage,
