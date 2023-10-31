@@ -18,7 +18,6 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
     limit = 100,
   } = options ?? {}
 
-  const total = ref<number | null>(null)
   const config = useChainConfig(chain)
 
   const fetchTxs = async ({ pageParam }: { pageParam?: string | number }) => {
@@ -44,19 +43,12 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
       },
     })
 
-    // update total count
-    total.value = parseInt(res.pagination.total) ?? null
-
     return res
   }
 
   // Handle a unique address + chain + filter combination as a new query
   const queryKey = computed(() => {
     return [toValue(address), toValue(chain), toValue(filter)]
-  })
-  // Also, reset results' total when new query is about to fire
-  watch(queryKey, () => {
-    total.value = null
   })
 
   const queryState = useInfiniteQuery({
@@ -76,6 +68,11 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
   }))
   const count = computed(() => data.value?.length ?? null)
 
+  const total = computed(() => {
+    const totalRes = queryState.data.value?.pages[0]?.pagination.total
+    return totalRes ? parseInt(totalRes) : null
+  })
+
   const restCount = computed(() => {
     return total.value && count.value
       ? total.value - count.value
@@ -88,7 +85,7 @@ export const useTransactions = <T extends KeyWithValueType<CosmosTxV1Beta1TxsRes
       : null
   })
 
-  const hasNextPage = computed(() => !!nextPageSize.value)
+  const hasNextPage = computed(() => nextPageSize.value === null ? null : !!nextPageSize.value)
 
   return {
     ...queryState,
