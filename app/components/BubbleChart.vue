@@ -98,7 +98,5 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
   text.selectAll()
     .data(d => `${d.value}`)
     .join('tspan')
-    .attr('x', 0)
-    .attr('y', (_, i, nodes) => `${i - nodes.length / 2 + 0.5}em`)
 }, { debounce: 100 })
 </script>

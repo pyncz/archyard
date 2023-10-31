@@ -32,31 +32,44 @@
           :data="sortedData"
           :get-value="d => d.value"
           :get-group="d => d.name"
-          :get-label="d => d.value.toString()"
+          :get-label="d => `${d.value}`"
           class="tw-cover tw-pt-6"
         >
-          <div class="tw-absolute tw-pointer-events-none tw-duration-100 tw-z-[1] tw-top-0 tw-inset-x-0 tw-flex-center-y tw-flex-col">
-            <hint-message class="tw-mb-1 tw--mt-4 tw-max-w-xs tw-mx-auto">
-              <template #icon>
-                <Icon name="iconoir:copy" />
-              </template>
-              <template v-if="copied">
+          <div class="tw-absolute tw-inset-x-0 tw-pointer-events-none tw-duration-100 tw-z-[1] tw-top-0 tw-flex-center-y tw-flex-col">
+            <transition
+              appear
+              appear-active-class="tw-duration-100"
+              mode="out-in"
+              enter-from-class="tw-opacity-0"
+              enter-active-class="tw-duration-100"
+              enter-to-class="tw-opacity-full"
+              leave-from-class="tw-opacity-full"
+              leave-active-class="tw-duration-100"
+              leave-to-class="tw-opacity-0"
+            >
+              <hint-message v-if="copied" class="tw-mb-1 tw--mt-4 tw-max-w-xs tw-mx-auto">
+                <template #icon>
+                  <Icon name="iconoir:copy" />
+                </template>
                 Copied!
-              </template>
-              <template v-else>
+              </hint-message>
+              <hint-message v-else class="tw-mb-1 tw--mt-4 tw-max-w-xs tw-mx-auto">
+                <template #icon>
+                  <Icon name="iconoir:copy" />
+                </template>
                 Click on the circle to copy address.
-              </template>
-            </hint-message>
+              </hint-message>
+            </transition>
 
             <transition
-              enter-from-class="tw-opacity-0 tw--translate-y-2 tw-scale-90"
+              enter-from-class="tw-opacity-0 tw-translate-y-2 tw-scale-90"
               enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
               leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
               leave-to-class="tw-opacity-0 tw-translate-y-4 tw-scale-90"
             >
               <peer-account-representation
                 v-if="throttledHighlightedData"
-                class="tw-max-w-sm"
+                class="tw-max-w-full md:tw-max-w-sm"
                 :data="throttledHighlightedData"
               />
             </transition>
@@ -67,16 +80,17 @@
 
     <div class="tw-fixed tw-bottom-0 tw-py-8 tw-px-4 tw-inset-x-0 tw-flex-center tw-flex-col tw-gap-3 tw-text-center">
       <transition
-        enter-from-class="tw-opacity-0 tw-translate-y-8 tw-scale-90"
-        enter-active-class="tw-duration-150"
-        enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
-        leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+        appear
+        enter-from-class="tw-opacity-0 tw-translate-y-8"
+        enter-active-class="tw-duration-150 tw-delay-150"
+        enter-to-class="tw-opacity-full tw-translate-y-0"
+        leave-from-class="tw-opacity-full tw-translate-y-0"
         leave-active-class="tw-duration-150"
-        leave-to-class="tw-opacity-0 tw-translate-y-8 tw-scale-90"
+        leave-to-class="tw-opacity-0 tw-translate-y-8"
       >
         <div
           v-if="!isPending"
-          class="tw-modal before:tw-duration-300 tw-ease-out tw-rounded-full tw-flex-center-y before:tw-opacity-full hover:before:tw-opacity-muted tw-animate-spread [animation-duration:150ms]"
+          class="tw-modal before:tw-duration-300 tw-ease-out tw-rounded-full tw-flex-center-y before:tw-opacity-full hover:before:tw-opacity-muted tw-animate-spread [animation-duration:500ms]"
         >
           <div
             v-if="total !== null && count !== null"

@@ -10,20 +10,52 @@
     </transition>
 
     <div class="tw-px-4 xs:tw-px-6 sm:tw-container tw-flex-1 tw-flex tw-flex-col">
-      <header class="tw-border-b tw-border-r4 md:tw-border-none tw-py-8 md:tw-py-4 tw-grid tw-gap-2 tw-grid-cols-2 lg:tw-grid-cols-3 sm:tw-items-center">
+      <header class="tw-min-h-[4.625rem] tw-border-b tw-border-r4 md:tw-border-none tw-py-6 md:tw-py-4 tw-grid tw-gap-2 tw-grid-cols-2 lg:tw-grid-cols-3 sm:tw-items-center">
         <div class="tw-flex tw-justify-start tw-col-start-2 sm:tw-col-start-1 sm:tw-row-start-2 lg:tw-row-start-1">
           <ClientOnly>
-            <selected-address />
+            <transition
+              mode="out-in"
+              enter-from-class="tw-opacity-0 tw--translate-y-2"
+              enter-active-class="tw-duration-300"
+              enter-to-class="tw-opacity-full tw-translate-y-0"
+              leave-from-class="tw-opacity-full tw-translate-y-0"
+              leave-active-class="tw-duration-300"
+              leave-to-class="tw-opacity-0 tw--translate-y-4"
+            >
+              <selected-address />
+            </transition>
           </ClientOnly>
         </div>
         <div class="tw-flex sm:tw-justify-center tw-pb-1 tw-row-start-1 sm:tw-col-span-2 lg:tw-col-span-1 tw-col-start-1 lg:tw-col-start-2">
-          <app-logo v-show="address" :short="isXsScreen" class="tw-h-8" />
+          <transition
+            mode="out-in"
+            enter-from-class="tw-opacity-0 tw--translate-y-2"
+            enter-active-class="tw-duration-300"
+            enter-to-class="tw-opacity-full tw-translate-y-0"
+            leave-from-class="tw-opacity-full tw-translate-y-0"
+            leave-active-class="tw-duration-300"
+            leave-to-class="tw-opacity-0 tw--translate-y-4"
+          >
+            <app-logo v-show="address" :short="isXsScreen" class="tw-h-8" />
+          </transition>
         </div>
         <div class="tw-flex tw-flex-col xs:tw-flex-row tw-flex-wrap sm:tw-justify-end tw-gap-2 tw-row-start-2 tw-col-span-2 sm:tw-col-span-1 lg:tw-row-start-1 lg:tw-col-start-3">
-          <select-chain class="max-xs:tw-w-full" />
           <ClientOnly>
-            <select-filter v-if="address" class="tw-w-full xs:tw-w-auto" />
+            <transition
+              mode="out-in"
+              enter-from-class="tw-opacity-0 tw--translate-y-2"
+              enter-active-class="tw-duration-300"
+              enter-to-class="tw-opacity-full tw-translate-y-0"
+              leave-from-class="tw-opacity-full tw-translate-y-0"
+              leave-active-class="tw-duration-300"
+              leave-to-class="tw-opacity-0 tw--translate-y-4"
+            >
+              <div v-if="address" class="tw-w-full xs:tw-w-auto">
+                <select-filter class="tw-w-full" />
+              </div>
+            </transition>
           </ClientOnly>
+          <select-chain class="max-xs:tw-w-full" />
         </div>
       </header>
 
@@ -39,9 +71,11 @@
             mode="out-in"
             enter-from-class="tw-opacity-0"
             enter-to-class="tw-opacity-full"
+            leave-from-class="tw-opacity-full"
+            leave-to-class="tw-opacity-0"
           >
-            <interactions-chart v-if="address" class="tw-duration-500" />
-            <div v-else class="tw-w-full tw-space-y-6 tw-duration-500">
+            <interactions-chart v-if="address" class="tw-duration-150" />
+            <div v-else class="tw-w-full tw-space-y-6 tw-duration-150">
               <div class="tw-space-y-2 tw-text-center tw-max-w-xs tw-flex-center-y tw-flex-col tw-mx-auto">
                 <app-logo class="tw-h-12 tw-animate-fadein" />
                 <p class="tw-text-r2 tw-text-sm tw-leading-sm">

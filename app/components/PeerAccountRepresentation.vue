@@ -22,7 +22,7 @@ const props = defineProps<{
 }>()
 
 const label = computed(() => {
-  return `${props.data.value} ${props.data.value > 1 ? 'Transactions' : 'Transaction'}`
+  return `${props.data.value} ${props.data.value > 1 ? 'Transfers' : 'Transfer'}`
 })
 
 const { copy, copied } = useClipboard({ source: () => props.data.name })
