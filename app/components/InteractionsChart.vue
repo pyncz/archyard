@@ -2,7 +2,7 @@
   <div v-if="address" class="tw-w-full tw-flex-1 tw-flex tw-flex-col">
     <div class="tw-relative tw-flex-1 tw-duration-300">
       <div v-if="!aggregatedTxs.size" class="tw-py-12 tw-px-4 tw-text-center tw-text-r3">
-        <p v-if="isLoading">
+        <p v-if="isPending">
           Loading...
         </p>
         <p v-else-if="!transactions?.length">
@@ -33,7 +33,7 @@
           :get-value="d => d.value"
           :get-group="d => d.name"
           :get-label="d => d.value.toString()"
-          class="tw-cover"
+          class="tw-cover tw-pt-6"
         >
           <div class="tw-absolute tw-pointer-events-none tw-duration-100 tw-z-[1] tw-top-0 tw-inset-x-0 tw-flex-center-y tw-flex-col">
             <hint-message class="tw-mb-1 tw--mt-4 tw-max-w-xs tw-mx-auto">
@@ -66,52 +66,61 @@
     </div>
 
     <div class="tw-fixed tw-bottom-0 tw-py-8 tw-px-4 tw-inset-x-0 tw-flex-center tw-flex-col tw-gap-3 tw-text-center">
-      <div class="tw-modal tw-p-2 before:tw-duration-300 tw-rounded-full tw-flex-center-y tw-animate-spread [animation-duration:150ms] [animation-delay:1s] before:tw-opacity-full hover:before:tw-opacity-muted">
+      <transition
+        enter-from-class="tw-opacity-0 tw-translate-y-8 tw-scale-90"
+        enter-active-class="tw-duration-150"
+        enter-to-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+        leave-from-class="tw-opacity-full tw-translate-y-0 tw-scale-100"
+        leave-active-class="tw-duration-150"
+        leave-to-class="tw-opacity-0 tw-translate-y-8 tw-scale-90"
+      >
         <div
-          v-if="total !== null && count !== null"
-          class="tw-opacity-0 tw-w-0 tw-animate-unfold [animation-delay:1s]"
+          v-if="!isPending"
+          class="tw-modal before:tw-duration-300 tw-ease-out tw-rounded-full tw-flex-center-y before:tw-opacity-full hover:before:tw-opacity-muted tw-animate-spread [animation-duration:150ms]"
         >
-          <count-representation class="tw-animate-fadein tw-text-r1 tw-w-16 tw-px-2" label="total">
-            {{ total }}
-          </count-representation>
-        </div>
-
-        <transition
-          mode="out-in"
-          enter-from-class="tw-opacity-0"
-          enter-active-class="tw-duration-150"
-          enter-to-class="tw-opacity-full"
-          leave-from-class="tw-opacity-full"
-          leave-active-class="tw-duration-500"
-          leave-to-class="tw-opacity-0"
-        >
-          <div v-if="isLoading" class="tw-relative tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
-            Loading...
-          </div>
-          <button
-            v-else-if="hasNextPage"
-            class="tw-button tw-whitespace-pre-wrap tw-button-primary tw-rounded-full tw-h-12"
-            :disabled="isPending"
-            @click="fetchNextPage()"
+          <div
+            v-if="total !== null && count !== null"
+            class="tw-opacity-0 tw-w-0 tw-animate-unfold [animation-delay:0.5s]"
           >
-            Fetch
-            <span class="tw-hidden xs:tw-inline">{{ nextPageSize }}</span>
-            older txs
-          </button>
-          <div v-else class="tw-relative tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
-            All fetched!
+            <count-representation class="tw-animate-fadein tw-text-r1 tw-w-16 tw-px-2" label="total">
+              {{ total }}
+            </count-representation>
           </div>
-        </transition>
 
-        <div
-          v-if="total !== null && count !== null"
-          class="tw-opacity-0 tw-w-0 tw-animate-unfold [animation-delay:1s]"
-        >
-          <count-representation class="tw-animate-fadein tw-text-r1 tw-w-16 tw-px-2" label="fetched">
-            {{ count }}
-          </count-representation>
+          <transition
+            mode="out-in"
+            enter-from-class="tw-opacity-0"
+            enter-active-class="tw-duration-300"
+            enter-to-class="tw-opacity-full"
+            leave-from-class="tw-opacity-full"
+            leave-active-class="tw-duration-500"
+            leave-to-class="tw-opacity-0"
+          >
+            <button
+              v-if="hasNextPage"
+              class="tw-button tw-whitespace-pre-wrap tw-button-primary tw-rounded-full tw-h-12"
+              :disabled="isFetching"
+              @click="fetchNextPage()"
+            >
+              Fetch
+              <span class="tw-hidden xs:tw-inline">{{ nextPageSize }}</span>
+              older txs
+            </button>
+            <div v-else class="tw-relative tw-h-12 tw-rounded-full tw-px-4 tw-py-2 tw-flex-center tw-bg-r2 tw-text-r3">
+              All fetched!
+            </div>
+          </transition>
+
+          <div
+            v-if="total !== null && count !== null"
+            class="tw-opacity-0 tw-w-0 tw-animate-unfold [animation-delay:0.5s]"
+          >
+            <count-representation class="tw-animate-fadein tw-text-r1 tw-w-16 tw-px-2" label="fetched">
+              {{ count }}
+            </count-representation>
+          </div>
         </div>
-      </div>
+      </transition>
       <error-message :error="error" />
     </div>
   </div>
@@ -136,8 +145,8 @@ const {
   nextPageSize,
   error,
   isPending,
+  isFetching,
   hasNextPage,
-  isLoading,
   fetchNextPage,
 } = useTransactions(
   address,
