@@ -1,8 +1,7 @@
 import type { Config } from 'tailwindcss'
 
-import headlessUiPlugin from '@headlessui/tailwindcss'
 import plugin from 'tailwindcss/plugin'
-import { layoutsPlugin, utilsPlugin } from './tailwind'
+import { headlessUiPlugin, layoutsPlugin, utilsPlugin } from './tailwind'
 
 import { co, fill } from './tailwind/helpers'
 
@@ -105,9 +104,8 @@ export default {
     },
   },
   plugins: [
-    headlessUiPlugin,
-
     // custom plugins
+    headlessUiPlugin,
     layoutsPlugin,
     utilsPlugin,
 
