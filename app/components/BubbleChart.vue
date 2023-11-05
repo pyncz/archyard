@@ -27,7 +27,6 @@ interface Props {
   data: BubbleChartDatum<T>[]
   getValue: (d: BubbleChartDatum<T>) => number
   getLabel?: (d: BubbleChartDatum<T>) => string
-  getGroup?: (d: BubbleChartDatum<T>) => string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -38,7 +37,6 @@ const getStringValue = (d: BubbleChartDatum<T>) => props.getValue(d).toString()
 const {
   getValue,
   getLabel = getStringValue,
-  getGroup = getStringValue,
 } = props
 
 const chart = ref<SVGElement | null>(null)
@@ -47,7 +45,6 @@ const { width, height } = useElementSize(viewportRef)
 
 const { copy, copied } = useClipboard()
 
-const color = d3.scaleOrdinal(d3.schemePastel2)
 const highlightedData = ref<Ref<BubbleChartDatum<T>> | null>(null)
 
 const throttledHighlightedData = refThrottled(highlightedData, 100)
@@ -77,8 +74,7 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
   node.append('circle')
-    .attr('class', 'tw-cursor-pointer tw-stroke-r4/0 tw-stroke-[3] tw-duration-300 hover:tw-stroke-r4 tw-opacity-soft hover:tw-opacity-full')
-    .attr('fill', d => color(getGroup(d.data)))
+    .attr('class', 'tw-cursor-pointer tw-fill-accent-r2 tw-stroke-accent-r1 tw-stroke tw-duration-300 hover:tw-stroke-accent-r0 tw-opacity-muted hover:tw-opacity-soft')
     .attr('r', d => d.r)
     .on('mouseover', (_, d) => {
       highlightedData.value = d.data
@@ -92,8 +88,9 @@ watchDebounced([width, height, viewportRef, chart, () => props.data, () => props
 
   const text = node.append('text')
     .attr('clip-path', d => `circle(${d.r})`)
-    .attr('class', 'tw-hidden sm:tw-inline tw-pointer-events-none')
+    .attr('class', 'tw-hidden tw-fill-accent-r0 sm:tw-inline tw-pointer-events-none')
     .text(d => getLabel(d.data))
+    .attr('y', '0.25em')
 
   text.selectAll()
     .data(d => `${d.value}`)

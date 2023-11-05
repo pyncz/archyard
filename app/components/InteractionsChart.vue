@@ -31,7 +31,6 @@
           v-slot="{ throttledHighlightedData, copied }"
           :data="sortedData"
           :get-value="d => d.value"
-          :get-group="d => d.name"
           :get-label="d => `${d.value}`"
           class="tw-cover tw-pt-6"
         >
