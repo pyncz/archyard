@@ -1,7 +1,5 @@
 import type { Config } from 'tailwindcss'
 
-// @ts-expect-error next
-import maskImagePlugin from '@pyncz/tailwind-mask-image'
 import headlessUiPlugin from '@headlessui/tailwindcss'
 import plugin from 'tailwindcss/plugin'
 import { layoutsPlugin, utilsPlugin } from './tailwind'
@@ -110,7 +108,6 @@ export default {
     headlessUiPlugin,
 
     // custom plugins
-    maskImagePlugin,
     layoutsPlugin,
     utilsPlugin,
 

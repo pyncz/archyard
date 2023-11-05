@@ -23,7 +23,6 @@
     "@headlessui/tailwindcss": "^0.2.0",
     "@nuxtjs/critters": "^0.5.1",
     "@nuxtjs/fontaine": "^0.4.1",
-    "@pyncz/tailwind-mask-image": "^2.0.0",
     "@tanstack/vue-query": "^5.4.1",
     "@vueuse/core": "^10.5.0",
     "d3": "^7.8.5",
