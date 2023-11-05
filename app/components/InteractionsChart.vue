@@ -169,18 +169,26 @@ const {
   { limit },
 )
 
+const counterpartyFilter = computed(() => {
+  return settings.value.filter === 'received'
+    ? 'sender'
+    : 'recipient'
+})
+
 const aggregatedTxs = useAggregatedData(
   transactions,
   (txRes) => {
     const keys = new Set<string>()
-    for (const event of txRes.logs[0].events) {
-      if (event.type !== 'transfer') {
-        continue
-      }
+    for (const log of txRes.logs) {
+      for (const event of log.events) {
+        if (event.type !== 'transfer') {
+          continue
+        }
 
-      for (const { key, value } of event.attributes) {
-        if (['recipient', 'sender'].includes(key) && value !== address.value) {
-          keys.add(value)
+        for (const { key, value } of event.attributes) {
+          if (counterpartyFilter.value === key) {
+            keys.add(value)
+          }
         }
       }
     }
